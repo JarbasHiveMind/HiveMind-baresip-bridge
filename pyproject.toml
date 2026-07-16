@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "HiveMind-baresip-bridge"
+description = "SIP <-> HiveMind bridge - answer phone calls with baresipy and relay them to hivemind-core"
+readme = "README.md"
+authors = [{ name = "jarbasAI", email = "jarbasai@mailfence.com" }]
+license = { text = "Apache-2.0" }
+requires-python = ">=3.9"
+dynamic = ["version"]
+dependencies = [
+    "baresipy[ovos]>=1.0.0a8",
+    # HiveMind transport + identity, same floor voice-relay uses for the
+    # bus-client 2.x line.
+    "hivemind-bus-client>=0.9.2a1",
+    "ovos-bus-client>=2.0.0a3",
+    "ovos-plugin-manager>=2.10.0a1",
+    # Local mic/VAD/STT loop that drives caller audio through recognition.
+    "ovos-simple-listener>=0.3.1a1",
+    "ovos-utils",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-timeout",
+]
+
+[project.urls]
+Homepage = "https://github.com/JarbasHiveMind/HiveMind-baresip-bridge"
+
+[project.scripts]
+hivemind-baresip-bridge = "hivemind_baresip_bridge.__main__:main"
+
+[tool.setuptools]
+packages = ["hivemind_baresip_bridge"]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "hivemind_baresip_bridge.version.__version__" }
