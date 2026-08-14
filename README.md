@@ -44,11 +44,11 @@ SIP caller  <----------------->  baresip  <----------------------------->  hivem
 
 ## Install
 
-```bash
-pip install HiveMind-baresip-bridge
-```
-
-Or from a checkout:
+This package is **not published on PyPI yet**
+([issue #5](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/issues/5)) —
+`pip install HiveMind-baresip-bridge` will fail. Install from a checkout,
+or build the Docker image, which also gets you a working `baresip` binary
+for free:
 
 ```bash
 git clone https://github.com/JarbasHiveMind/HiveMind-baresip-bridge
@@ -57,7 +57,13 @@ pip install .
 ```
 
 This installs the `hivemind-baresip-bridge` console command. A working
-[baresip](https://github.com/baresip/baresip) binary must be on `PATH`.
+[baresip](https://github.com/baresip/baresip) binary must be on `PATH`
+(`apt install baresip` on Debian/Ubuntu), or use `docker build -t
+hivemind-baresip-bridge .` instead.
+
+New to SIP? Read the [setup walkthrough](docs/setup.md) — it covers
+getting a SIP account from scratch (self-hosted Asterisk or a provider),
+installing, registering on the hub, and verifying a call round-trips.
 
 ## Configuration
 
