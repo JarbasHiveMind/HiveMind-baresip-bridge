@@ -12,16 +12,14 @@ requires-python = ">=3.9"
 dynamic = ["version"]
 dependencies = [
     "baresipy[ovos]>=1.0.0a8",
-    # HiveMind transport + identity. Floor is 1.0.13a1 because that is the
-    # first release where connect() reliably honours handshake_max_retries,
-    # bounding the handshake instead of retrying forever against a stalled
-    # hub.
-    "hivemind-bus-client>=1.0.13a1,<2.0.0",
-    "ovos-bus-client>=2.0.0a3",
-    "ovos-plugin-manager>=2.10.0a1",
+    # HiveMind transport + identity. Floor is 1.0.16a1, part of the
+    # proven-working HiveMind stack.
+    "hivemind-bus-client>=1.0.16a1",
+    "ovos-bus-client>=2.9.1a1",
+    "ovos-plugin-manager>=2.11.6a1",
     # Local mic/VAD/STT loop that drives caller audio through recognition.
     "ovos-simple-listener>=0.3.1a1",
-    "ovos-utils",
+    "ovos-utils>=0.13.15a1",
 ]
 
 [project.optional-dependencies]
