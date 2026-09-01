@@ -1,0 +1,88 @@
+# Fully self-contained, offline HiveMind SIP voice demo.
+#
+#   caller ──SIP/RTP──> asterisk ──SIP/RTP──> bridge ──HiveMind bus──> hub
+#                                                                        │
+#                                                          OVOS bus (messagebus)
+#                                                                        │
+#                                                                      agent
+#
+# The caller places two real SIP calls to the bridge through Asterisk, speaks
+# "what time is it?", and hears an answer. Each call the bridge answers mints
+# its own Layer-1 session id, so the agent records two DISTINCT session ids —
+# the per-call session isolation this demo guards.
+#
+# Run:
+#   docker compose up --build
+# or, for the e2e assertion, run demo/test/test_e2e_session_isolation.py.
+
+services:
+  messagebus:
+    build: ./messagebus
+    networks: [hive]
+
+  agent:
+    build: ./agent
+    depends_on: [messagebus]
+    environment:
+      OVOS_BUS_HOST: messagebus
+      OVOS_BUS_PORT: "8181"
+      SHARED_DIR: /shared
+    volumes:
+      - ${DEMO_SHARED_DIR:-./.shared}:/shared
+    networks: [hive]
+
+  hub:
+    build: ./hub
+    depends_on: [messagebus]
+    environment:
+      OVOS_BUS_HOST: messagebus
+      SHARED_DIR: /shared
+    volumes:
+      - ${DEMO_SHARED_DIR:-./.shared}:/shared
+    networks: [hive]
+
+  stt:
+    build: ./stt
+    networks: [hive]
+
+  asterisk:
+    image: andrius/asterisk:18.26.4_debian-trixie
+    volumes:
+      - ./asterisk/pjsip.conf:/etc/asterisk/pjsip.conf:ro
+      - ./asterisk/extensions.conf:/etc/asterisk/extensions.conf:ro
+      - ./asterisk/rtp.conf:/etc/asterisk/rtp.conf:ro
+    networks: [hive]
+
+  bridge:
+    build:
+      # the bridge is built from the repo root so it ships THIS checkout
+      context: ..
+      dockerfile: demo/bridge/Dockerfile
+    depends_on: [hub, asterisk, stt]
+    environment:
+      SHARED_DIR: /shared
+      SIP_USER: hmbridge
+      SIP_PASSWORD: hmbridge-demo-pw
+      SIP_GATEWAY: asterisk
+    volumes:
+      - ${DEMO_SHARED_DIR:-./.shared}:/shared
+    networks: [hive]
+
+  caller:
+    build:
+      context: .
+      dockerfile: caller/Dockerfile
+    depends_on: [bridge]
+    environment:
+      SIP_USER: caller
+      SIP_PASSWORD: caller-demo-pw
+      SIP_GATEWAY: asterisk
+      BRIDGE_URI: sip:hmbridge@asterisk
+      NUM_CALLS: "2"
+    volumes:
+      - ${DEMO_SHARED_DIR:-./.shared}:/shared
+    networks: [hive]
+
+networks:
+  hive:
+    driver: bridge

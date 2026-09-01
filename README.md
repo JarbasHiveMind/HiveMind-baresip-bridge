@@ -110,6 +110,13 @@ file, `~/.hivemind_baresip_bridge.json` by default (override the path with
 hivemind-baresip-bridge --host ws://core.example.com --key <access-key> --password <password>
 ```
 
+## Demo and end-to-end test
+
+`demo/` holds a self-contained, offline stack that places real SIP calls into
+the bridge and proves per-call session isolation. Run `docker compose up
+--build` from `demo/` for a full voice round trip, or run the packaged e2e
+test. See [demo/README.md](demo/README.md).
+
 ## Security notes
 
 - **SIP credentials** are stored as plaintext in the JSON config file and
