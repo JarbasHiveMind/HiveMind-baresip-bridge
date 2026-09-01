@@ -6,4 +6,6 @@ dist/
 .venv/
 .pytest_cache/
 *.wav
+# the demo ships a fixture question wav the caller image bakes in
+!demo/audio/*.wav
 .baresipy/
