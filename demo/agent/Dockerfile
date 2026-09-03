@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 # espeak-ng renders the demo agent's spoken answers; ffmpeg is pulled in for
 # any wav handling ovos_bus_client's deps expect.
