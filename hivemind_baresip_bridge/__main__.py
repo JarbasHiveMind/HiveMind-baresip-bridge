@@ -9,6 +9,10 @@ from hivemind_bus_client.identity import NodeIdentity
 from hivemind_baresip_bridge.bridge import BaresipBridge
 from hivemind_baresip_bridge.config import load_sip_config
 
+# Bound the initial handshake so a stalled/unreachable hub does not hang
+# the bridge forever; connect() otherwise retries indefinitely.
+DEFAULT_HANDSHAKE_MAX_RETRIES = 10
+
 
 def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -85,7 +89,8 @@ def connect(args=None) -> None:
                                host=host,
                                useragent="HiveMind-baresip-bridge",
                                self_signed=ns.selfsigned)
-    bus.connect(site_id=siteid)
+    bus.connect(site_id=siteid,
+                handshake_max_retries=DEFAULT_HANDSHAKE_MAX_RETRIES)
 
     bridge = BaresipBridge(sip_config=sip_config, bus=bus, lang=ns.lang)
 
