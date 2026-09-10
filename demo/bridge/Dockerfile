@@ -1,6 +1,6 @@
 # Built from the bridge repo root (compose sets context: ..). This is the
 # component under test: the real HiveMind-baresip-bridge from THIS checkout.
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     baresip ffmpeg ca-certificates \
