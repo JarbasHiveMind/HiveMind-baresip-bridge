@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1a5](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.1.1a5) (2026-09-10)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.1.1a4...0.1.1a5)
+
+**Merged pull requests:**
+
+- Update python Docker tag to v3.14 [\#29](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/pull/29) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [0.1.1a4](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.1.1a4) (2026-09-10)
 
 [Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.1.1a3...0.1.1a4)
