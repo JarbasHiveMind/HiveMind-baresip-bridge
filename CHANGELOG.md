@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2a1](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.1.2a1) (2026-09-17)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.1.1a5...0.1.2a1)
+
+**Merged pull requests:**
+
+- fix: emit destination as a string \(OVOS-MSG-1 §3.3\) [\#37](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/pull/37) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.1.1a5](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.1.1a5) (2026-09-10)
 
 [Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.1.1a4...0.1.1a5)
@@ -42,11 +50,15 @@
 
 ## [0.1.0a1](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.1.0a1) (2026-09-01)
 
-[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a8...0.1.0a1)
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a9...0.1.0a1)
 
 **Merged pull requests:**
 
 - feat: reproducible self-contained SIP voice demo + per-call session-isolation e2e test [\#27](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/pull/27) ([JarbasAl](https://github.com/JarbasAl))
+
+## [0.0.1a9](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a9) (2026-08-15)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a8...0.0.1a9)
 
 ## [0.0.1a8](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a8) (2026-08-15)
 
@@ -54,11 +66,7 @@
 
 ## [0.0.1a10](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a10) (2026-08-15)
 
-[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a9...0.0.1a10)
-
-## [0.0.1a9](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a9) (2026-08-15)
-
-[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a7...0.0.1a9)
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a7...0.0.1a10)
 
 **Merged pull requests:**
 
