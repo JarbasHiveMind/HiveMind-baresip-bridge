@@ -50,7 +50,7 @@ class CallCallbacks(ListenerCallbacks):
         return {
             "session": {"session_id": self.session_id},
             "source": "hivemind-baresip-bridge",
-            "destination": ["audio"],
+            "destination": "audio",
             "caller": self.caller,
             "platform": "hivemind-baresip-bridge",
         }
