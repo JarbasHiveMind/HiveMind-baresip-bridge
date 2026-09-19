@@ -55,7 +55,7 @@ def connect(args=None) -> None:
 
     init_service_logger("HiveMind-baresip-bridge")
 
-    identity = NodeIdentity()
+    identity = NodeIdentity(app_name="baresip-bridge")
     password = ns.password or identity.password
     key = ns.key or identity.access_key
     siteid = ns.siteid or identity.site_id or "unknown"
@@ -88,7 +88,8 @@ def connect(args=None) -> None:
                                port=port,
                                host=host,
                                useragent="HiveMind-baresip-bridge",
-                               self_signed=ns.selfsigned)
+                               self_signed=ns.selfsigned,
+                               identity=identity)
     bus.connect(site_id=siteid,
                 handshake_max_retries=DEFAULT_HANDSHAKE_MAX_RETRIES)
 
