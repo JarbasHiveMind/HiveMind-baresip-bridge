@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3a1](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.1.3a1) (2026-09-19)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.1.2a1...0.1.3a1)
+
+**Merged pull requests:**
+
+- fix: the bridge keeps its own HiveMind identity \(CRYPTO-1 §2\) [\#39](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/pull/39) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.1.2a1](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.1.2a1) (2026-09-17)
 
 [Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.1.1a5...0.1.2a1)
@@ -58,15 +66,15 @@
 
 ## [0.0.1a9](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a9) (2026-08-15)
 
-[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a8...0.0.1a9)
-
-## [0.0.1a8](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a8) (2026-08-15)
-
-[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a10...0.0.1a8)
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a10...0.0.1a9)
 
 ## [0.0.1a10](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a10) (2026-08-15)
 
-[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a7...0.0.1a10)
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a8...0.0.1a10)
+
+## [0.0.1a8](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/tree/0.0.1a8) (2026-08-15)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/compare/0.0.1a7...0.0.1a8)
 
 **Merged pull requests:**
 
