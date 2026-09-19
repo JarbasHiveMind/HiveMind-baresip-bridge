@@ -177,3 +177,10 @@ class TestTTSPlayback(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestContextDestination(unittest.TestCase):
+    def test_destination_is_a_string(self):
+        # OVOS-MSG-1 §3.3: destination is a string, with no list form.
+        cb = CallCallbacks(MagicMock(), caller="100", session_id="s")
+        self.assertEqual(cb._context()["destination"], "audio")

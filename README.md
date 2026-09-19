@@ -1,12 +1,12 @@
 # HiveMind-baresip-bridge
 
-A SIP <-> HiveMind bridge. It answers phone calls with
+A SIP-to-HiveMind bridge. It answers phone calls with
 [baresipy](https://github.com/TigreGotico/baresipy), runs the caller's
-speech through local ovos listener plugins, relays recognized utterances to
+speech through local OVOS listener plugins, sends the recognized text to
 [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) over the
 HiveMind bus, and speaks hivemind-core's replies back into the call.
 
-Think of it as [HiveMind-voice-relay](https://github.com/JarbasHiveMind/HiveMind-voice-relay),
+It works like [HiveMind-voice-relay](https://github.com/JarbasHiveMind/HiveMind-voice-relay),
 except the microphone is a phone call.
 
 ```
@@ -21,31 +21,34 @@ SIP caller  <----------------->  baresip  <----------------------------->  hivem
 ```
 
 - The bridge is a `baresipy.BareSIP` client. It auto-answers incoming
-  calls (optionally gated by an allowlist of caller numbers) and, once a
-  call is established, starts a local `ovos_simple_listener.SimpleListener`
-  reading audio straight from the call via `baresipy.ovos.BareSIPMicrophone`.
-  No wakeword is used - the call being answered is the activation signal;
-  voice activity detection segments the caller's utterances.
-- Each recognized utterance is forwarded to hivemind-core as a
-  `recognizer_loop:utterance` message, with the caller's number and a
-  per-call session id set in `message.context` so replies route back to
-  the right call.
-- DTMF digits pressed during the call are forwarded as
-  `baresip.dtmf` messages so hivemind-core skills can react to them.
-- Replies are **not** synthesized locally. hivemind-core is asked to
-  synthesize speech (`speak:b64_audio`) and returns the rendered audio as a
-  base64-encoded wav in a `speak:b64_audio.response` message; the bridge
-  decodes it and plays it into the call with `BareSIP.send_audio()`. This
-  mirrors how HiveMind-voice-relay receives TTS audio.
-- When the call ends the listener is stopped and its resources released.
+  calls, optionally gated by an allowlist of caller numbers. Once a call
+  is established, it starts a local `ovos_simple_listener.SimpleListener`
+  that reads audio straight from the call through
+  `baresipy.ovos.BareSIPMicrophone`. The bridge uses no wakeword: the
+  answered call is the activation signal, and voice activity detection
+  segments the caller's speech into utterances.
+- The bridge forwards each recognized utterance to hivemind-core as a
+  `recognizer_loop:utterance` message. It sets the caller's number and a
+  per-call session ID in `message.context` so replies route back to the
+  right call.
+- The bridge forwards DTMF digits pressed during the call as
+  `baresip.dtmf` messages, so hivemind-core skills can react to them.
+- The bridge does not synthesize replies locally. It asks hivemind-core to
+  synthesize speech (`speak:b64_audio`) and gets back the rendered audio
+  as a base64-encoded WAV in a `speak:b64_audio.response` message. The
+  bridge decodes this audio and plays it into the call with
+  `BareSIP.send_audio()`. This mirrors how HiveMind-voice-relay receives
+  TTS audio.
+- When the call ends, the bridge stops the listener and releases its
+  resources.
 
 ## Install
 
-```bash
-pip install HiveMind-baresip-bridge
-```
-
-Or from a checkout:
+This package is **not published on PyPI yet**
+([issue #5](https://github.com/JarbasHiveMind/HiveMind-baresip-bridge/issues/5)) —
+`pip install HiveMind-baresip-bridge` will fail. Install from a checkout,
+or build the Docker image, which also gets you a working `baresip` binary
+for free:
 
 ```bash
 git clone https://github.com/JarbasHiveMind/HiveMind-baresip-bridge
@@ -54,26 +57,31 @@ pip install .
 ```
 
 This installs the `hivemind-baresip-bridge` console command. A working
-[baresip](https://github.com/baresip/baresip) binary must be available on
-`PATH`.
+[baresip](https://github.com/baresip/baresip) binary must be on `PATH`
+(`apt install baresip` on Debian/Ubuntu), or use `docker build -t
+hivemind-baresip-bridge .` instead.
+
+New to SIP? Read the [setup walkthrough](docs/setup.md) — it covers
+getting a SIP account from scratch (self-hosted Asterisk or a provider),
+installing, registering on the hub, and verifying a call round-trips.
 
 ## Configuration
 
-hivemind-core credentials (access key, password, host, port, site id) are
-resolved from a `hivemind_bus_client.identity.NodeIdentity`, the same
-identity file `hivemind-voice-relay` and the other HiveMind clients use.
-Set it once with:
+The bridge resolves hivemind-core credentials (access key, password, host,
+port, site ID) from a `hivemind_bus_client.identity.NodeIdentity` file, the
+same identity file `hivemind-voice-relay` and the other HiveMind clients
+use. Set it once with:
 
 ```bash
 hivemind-client set-identity --key <access-key> --password <password> --host ws://core.example.com
 ```
 
-Every field can also be overridden per-run with a CLI flag (`--host`,
-`--port`, `--key`, `--password`, `--selfsigned`, `--siteid`).
+You can override every field per run with a CLI flag (`--host`, `--port`,
+`--key`, `--password`, `--selfsigned`, `--siteid`).
 
-SIP settings (they are not part of `NodeIdentity`) live in a small JSON
-file, `~/.hivemind_baresip_bridge.json` by default (override with
-`--sip-config` or the `HIVEMIND_BARESIP_CONFIG` env var):
+SIP settings are not part of `NodeIdentity`. They live in a small JSON
+file, `~/.hivemind_baresip_bridge.json` by default (override the path with
+`--sip-config` or the `HIVEMIND_BARESIP_CONFIG` environment variable):
 
 ```json
 {
@@ -86,11 +94,11 @@ file, `~/.hivemind_baresip_bridge.json` by default (override with
 }
 ```
 
-- `sip_gateway` may be omitted to run in registrar-less/direct mode (SIP
-  URIs are used verbatim, no registration is performed).
-- `allowlist` is a list of caller numbers permitted to reach the bridge;
-  leave it empty (or omit it) to accept calls from anyone.
-- Every field can be overridden by an environment variable
+- You can omit `sip_gateway` to run in registrar-less/direct mode. In this
+  mode the bridge uses SIP URIs verbatim and performs no registration.
+- `allowlist` lists the caller numbers permitted to reach the bridge.
+  Leave it empty, or omit it, to accept calls from anyone.
+- You can override every field with an environment variable
   (`HIVEMIND_BARESIP_SIP_USER`, `HIVEMIND_BARESIP_SIP_PASSWORD`,
   `HIVEMIND_BARESIP_SIP_GATEWAY`, `HIVEMIND_BARESIP_SIP_TRANSPORT`) or a
   matching CLI flag (`--sip-user`, `--sip-password`, `--sip-gateway`,
@@ -102,20 +110,41 @@ file, `~/.hivemind_baresip_bridge.json` by default (override with
 hivemind-baresip-bridge --host ws://core.example.com --key <access-key> --password <password>
 ```
 
+## Demo and end-to-end test
+
+`demo/` holds a self-contained, offline stack that places real SIP calls into
+the bridge and proves per-call session isolation. Run `docker compose up
+--build` from `demo/` for a full voice round trip, or run the packaged e2e
+test. See [demo/README.md](demo/README.md).
+
 ## Security notes
 
-- **SIP credentials** are plaintext in the JSON config file and in
-  environment variables; restrict the file's permissions
+- **SIP credentials** are stored as plaintext in the JSON config file and
+  in environment variables. Restrict the file's permissions
   (`chmod 600 ~/.hivemind_baresip_bridge.json`) and avoid passing
   `--sip-password` on a shared shell history.
-- **hivemind-core access key/password** follow the same handling as any
-  other HiveMind client: they live in the `NodeIdentity` file
-  (`~/.config/hivemind/_identity.json` by default) and are never logged.
-  Use `--selfsigned` only against a hivemind-core instance whose
-  certificate you already trust.
+- The **hivemind-core access key and password** follow the same handling
+  as any other HiveMind client: they live in the `NodeIdentity` file
+  (`~/.config/hivemind/_identity.json` by default) and the bridge never
+  logs them. Use `--selfsigned` only against a hivemind-core instance
+  whose certificate you already trust.
 - **Caller allowlisting** is number-based and trusts the `From` header
-  reported by the SIP peer, which is not cryptographically verified; treat
-  it as a convenience filter, not an authentication mechanism.
-- Recorded call audio (`record_rx=True`) is written to a temp directory for
-  the lifetime of the call; ensure the host's temp directory is not
-  world-readable if calls may carry sensitive content.
+  reported by the SIP peer. The bridge does not verify this header
+  cryptographically, so treat allowlisting as a convenience filter, not
+  an authentication mechanism.
+- When `record_rx=True`, the bridge writes recorded call audio to a temp
+  directory for the lifetime of the call. Make sure the host's temp
+  directory is not world-readable if calls may carry sensitive content.
+
+## Related projects
+
+- [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) — the
+  HiveMind server this bridge connects to.
+- [HiveMind-voice-relay](https://github.com/JarbasHiveMind/HiveMind-voice-relay) —
+  a sibling bridge that streams microphone audio instead of call audio.
+- [baresipy](https://github.com/TigreGotico/baresipy) — the SIP client
+  library this bridge uses to answer calls.
+
+## License
+
+Apache-2.0.
