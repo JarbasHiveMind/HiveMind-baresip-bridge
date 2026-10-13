@@ -1,4 +1,4 @@
-FROM python:3.14-slim
+FROM python:3.15-slim
 
 # `baresip` is the real SIP UA binary baresipy drives; ffmpeg backs pydub's
 # audio conversion/resampling for send_audio.
